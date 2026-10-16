@@ -48,6 +48,33 @@ for (const key of [
 ])
   delete env[key];
 let server;
+let runningCheck;
+let cleaned = false;
+function cleanup() {
+  if (cleaned) return;
+  cleaned = true;
+  for (const child of [runningCheck, server])
+    if (child?.pid) {
+      try {
+        process.kill(-child.pid, "SIGTERM");
+      } catch {}
+    }
+  if (moved) {
+    if (existsSync(source))
+      throw new Error(
+        `A new ${source} appeared during tests; original preserved in ${backup}.`,
+      );
+    renameSync(backup, source);
+  }
+}
+process.once("SIGINT", () => {
+  cleanup();
+  process.exit(130);
+});
+process.once("SIGTERM", () => {
+  cleanup();
+  process.exit(143);
+});
 try {
   server = spawn(
     "npm",
@@ -68,25 +95,20 @@ try {
   if (!ready) throw new Error("Fixture server startup timed out");
   for (const script of ["scripts/visual-check.mjs", "scripts/auth-check.mjs"])
     await new Promise((resolve, reject) => {
-      const p = spawn(process.execPath, [script], { env, stdio: "inherit" });
+      const p = spawn(process.execPath, [script], {
+        env,
+        stdio: "inherit",
+        detached: true,
+      });
+      runningCheck = p;
       p.on("error", reject);
-      p.on("exit", (code) =>
+      p.on("exit", (code) => {
+        runningCheck = undefined;
         code === 0
           ? resolve()
-          : reject(new Error(`${script} failed with ${code}`)),
-      );
+          : reject(new Error(`${script} failed with ${code}`));
+      });
     });
 } finally {
-  if (server?.pid) {
-    try {
-      process.kill(-server.pid, "SIGTERM");
-    } catch {}
-  }
-  if (moved) {
-    if (existsSync(source))
-      throw new Error(
-        `A new ${source} appeared during tests; original preserved in ${backup}.`,
-      );
-    renameSync(backup, source);
-  }
+  cleanup();
 }
