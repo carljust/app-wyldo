@@ -28,6 +28,14 @@ try {
     });
     const page = await context.newPage();
     page.on("pageerror", (e) => errors.push(e.message));
+    const tileResponses = [];
+    page.on("response", (response) => {
+      if (response.url().startsWith("https://tile.openstreetmap.org/"))
+        tileResponses.push({
+          status: response.status(),
+          blocked: response.headers()["x-blocked"] || null,
+        });
+    });
     async function open(path) {
       await page.goto(base + path, { waitUntil: "domcontentloaded" });
       await page
@@ -84,7 +92,21 @@ try {
       .filter({ visible: true })
       .scrollIntoViewIfNeeded();
     await page.locator(".leaflet-container:visible").waitFor();
-    await page.waitForTimeout(1800);
+    await check(
+      `${width} real basemap tiles load with TLS verification`,
+      async () => {
+        await page.waitForFunction(() =>
+          [...document.querySelectorAll(".leaflet-tile")].some(
+            (img) => img.complete && img.naturalWidth > 0,
+          ),
+        );
+        assert.ok(tileResponses.some((r) => r.status === 200 && !r.blocked));
+        assert.ok(tileResponses.every((r) => r.status < 400 && !r.blocked));
+        await page
+          .getByText("Karte wird geladen …", { exact: true })
+          .waitFor({ state: "hidden" });
+      },
+    );
     await shot("quest-route");
     await check(
       `${width} detail track and combined start-finish marker`,
@@ -111,6 +133,7 @@ try {
     await shot("navigation-richtung");
     await page
       .getByText("Luftlinie zum Startpunkt", { exact: true })
+      .locator("..")
       .scrollIntoViewIfNeeded();
     await shot("navigation-richtung-distanz");
     await noOverflow("direction");

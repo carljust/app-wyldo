@@ -13,6 +13,10 @@
       "status": "passed"
     },
     {
+      "name": "320 real basemap tiles load with TLS verification",
+      "status": "passed"
+    },
+    {
       "name": "320 detail track and combined start-finish marker",
       "status": "passed"
     },
@@ -69,6 +73,10 @@
       "status": "passed"
     },
     {
+      "name": "360 real basemap tiles load with TLS verification",
+      "status": "passed"
+    },
+    {
       "name": "360 detail track and combined start-finish marker",
       "status": "passed"
     },
@@ -122,6 +130,10 @@
     },
     {
       "name": "390 details: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "390 real basemap tiles load with TLS verification",
       "status": "passed"
     },
     {

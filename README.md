@@ -53,4 +53,4 @@ Das hochgeladene Paket wurde in die vorgesehenen Rootpfade verschoben: [AGENTS.m
 
 Architektur, Einschränkungen, Screenshotvergleich und Prüfergebnisse: [docs/implementation/REVIEW.md](docs/implementation/REVIEW.md).
 
-**STOP nach Phase 2. Keine Quest-Engine oder produktive Backendanbindung vor ausdrücklicher Designfreigabe.**
+**Phase 1–2 ist vom Nutzer visuell freigegeben.** Die anschließende Kartenprüfung lädt echte OSM-Kacheln mit aktivem TLS. Keine Quest-Engine oder produktive Backendanbindung in diesem Paket. Native Geräte-/Outdoor-Abnahme steht noch aus.

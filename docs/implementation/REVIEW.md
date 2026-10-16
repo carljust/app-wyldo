@@ -2,7 +2,7 @@
 
 **Stand:** 17.10.2026 · **Branch:** `feat/wyldo-design-v12` · **Basis:** `d15cd71` (Masterpaket V1.2). **Implementierungscommit:** `65986c8`. **PR:** [#1](https://github.com/carljust/app-wyldo/pull/1), offen; Feature-Branch erfolgreich gepusht.
 
-**Status:** Implementierung zur visuellen Prüfung, keine Designabnahme und keine Outdoor-Freigabe. Online-Kartenkacheln sind im Testbrowser wegen fehlendem Vertrauen in die bereitgestellte Cloud-Proxy-CA weiterhin nicht verifiziert. Die Netzwerkfreigabe und die GitHub-PR-API funktionieren inzwischen. Kein Backend, keine Quest-Engine, keine produktive Station und keine Belohnungsvergabe implementiert.
+**Status:** Phase 1–2 vom Nutzer visuell freigegeben. Die dauerhafte Aufnahme der bereitgestellten Cloud-Proxy-CA wurde ebenfalls ausdrücklich genehmigt. Echte OSM-Basiskarten werden jetzt im Browser mit aktiver TLS-Prüfung geladen; Screenshots aktualisiert. Kein Backend, keine Quest-Engine, keine produktive Station und keine Belohnungsvergabe implementiert. Native Geräte- und Outdoor-Freigaben bleiben offen.
 
 ## Geliefert
 
@@ -20,11 +20,11 @@ Das hochgeladene Paket wurde aus seinem ZIP-Ordnernamen nach `AGENTS.md`, `CODEX
 | `npm run format:check` | Erfolgreich; Formatprüfung, kein semantischer Linter |
 | `CI=1 EXPO_NO_TELEMETRY=1 EXPO_OFFLINE=1 npm run build:web` | Produktions-Webexport erfolgreich |
 | `CI=1 EXPO_NO_TELEMETRY=1 EXPO_OFFLINE=1 npx expo export --platform ios --platform android --output-dir /tmp/wyldo-native-export` | Beide Hermes-/JS-Exports erfolgreich; keine nativen Binärbuilds |
-| `npm run test:ui` gegen laufenden Devserver | **42/42** Browserprüfungen bestanden; keine Browser-Runtimefehler; 30 Screenshots |
+| `npm run test:ui` gegen laufenden Devserver | **45/45** Browserprüfungen bestanden; keine Browser-Runtimefehler; 30 aktualisierte Screenshots, einschließlich geladener OSM-Basiskarten |
 | `node scripts/production-check.mjs` gegen lokal bedienten `dist`-SPA-Export | **3/3** Browserprüfungen bestanden: kein Draft im Discovery, direkter Draftlink gesperrt, Simulation gesperrt |
 | `git diff --check` | Keine Whitespacefehler |
 
-UI-Protokoll: [ui-results.json](ui-results.json). UI-Tests prüfen alle drei Viewports, die unabhängige Auswahl beider Questpins, leere Routen, nur einen gemeinsamen Start/Zielpin, vorhandenen GPX-Pfad, Luftlinie, Headingänderung, Pause/Fortsetzen, fehlenden Standort, Kachelfehler und horizontale Überläufe. Offline-Prüfung betrifft lokal vorhandene Questdaten bei **gesperrten Tile-Anfragen**, nicht vollständiges Web-Neuladen ohne Netzwerk und nicht Offline-Kachelpakete.
+UI-Protokoll: [ui-results.json](ui-results.json). UI-Tests prüfen erfolgreiche echte Tile-Antworten ohne OSM-Blockheader und geladene Rasterbilder bei allen drei Viewports, die unabhängige Auswahl beider Questpins, leere Routen, nur einen gemeinsamen Start/Zielpin, vorhandenen GPX-Pfad, Luftlinie, Headingänderung, Pause/Fortsetzen, fehlenden Standort, Kachelfehler und horizontale Überläufe. Offline-Prüfung betrifft lokal vorhandene Questdaten bei **gesperrten Tile-Anfragen**, nicht vollständiges Web-Neuladen ohne Netzwerk und nicht Offline-Kachelpakete.
 
 ### Bekannte Installations-/Buildhinweise
 
@@ -45,18 +45,18 @@ Die Vektorlandschaft ist eigene dekorative Prototypgrafik, kein geografischer Na
 
 ## Offene Punkte und konkrete Blocker
 
-1. **Kartenkacheln:** Anfangs HTTP 403 beim Cloudproxy-CONNECT; die gespeicherte Domainfreigabe ist inzwischen wirksam. Der Browser scheitert nun nachvollziehbar mit `net::ERR_CERT_AUTHORITY_INVALID`: Die bereitgestellte `environment-proxy-ca.crt` fehlt im Chromium-NSS-Vertrauensspeicher. Die automatische Freigabeprüfung hat deren dauerhaften Import abgelehnt, da er das Vertrauen für künftigen Browserverkehr erweitert; der Import wurde nicht ausgeführt und kein TLS-Bypass eingesetzt. Ein separater curl-HEAD erhält zwar HTTP 200, aber auch einen OSM-`x-blocked`-Header; das beweist ebenfalls kein korrektes Kartenbild. Screenshotkarten zeigen deshalb ehrlich den Kachelfehler, die echte georeferenzierte GPX-Geometrie und Marker. **Eine geladene Basiskarte wurde nicht verifiziert.** Explizite Zustimmung zur Browser-CA-Konfiguration ist offen; danach Browser-Tiles samt OSM-Policy prüfen und Screenshots aktualisieren.
+1. **Kartenkacheln – behoben:** Die Domainfreigabe ist wirksam. Nach ausdrücklicher Nutzerzustimmung wurde die vom Cloudsystem bereitgestellte `environment-proxy-ca.crt` per `certutil -A` für Chromiums NSS-Speicher zugelassen. Zertifikatsfingerprint gegen die bereitgestellte CA geprüft; NSS führt denselben Zertifikatsinhalt unter `OpenAI-nebula-dns`. Schreibzugriff auf `/home/agent/.pki/nssdb` war für die wirksame Einrichtung erforderlich. Kein Abschalten oder selektives Umgehen der TLS-Prüfung. Browser-Tileantworten: HTTP 200 ohne `x-blocked`, tatsächlich geladene Rasterbilder und visuell geprüfte OSM-Basiskarte. Die frühere automatische Ablehnung wurde durch die explizite Zustimmung des Nutzers aufgelöst. Separate Fehler-Screenshots werden nun gezielt mit abgebrochenen Tile-Anfragen erzeugt; reguläre Karten-Screenshots zeigen die geladene Karte.
 2. **Pull Request:** Die anfängliche GitHub-API-Netzwerksperre ist behoben. [PR #1](https://github.com/carljust/app-wyldo/pull/1) wurde tatsächlich erstellt und sein Status `OPEN` per API bestätigt. Branch und Commit sind remote verifiziert. Beschreibung auch in [PR.md](PR.md).
 3. **Native Tests:** Keine iOS-/Android-Simulatoren/Geräte und keine signierten Development Builds geprüft. Android-Maps-Key/SDK-Einrichtung, native Kachelfailure-Zustände, Zoomclustering, Touch, Safe Areas und Rendering auf Geräten sind offen. Expo Go nicht als unterstützt bestätigt.
 4. **Live-Funktionen:** GPS/Kompass nur Simulation; `expo-location`-/Berechtigungsintegration erst nach späterer Freigabe. Kein Feldcheck, keine bestätigten Stationen, kein sicherer Produktivstart. Der importierte Track misst ca. 2,55 km, beweist aber keine sichere Wegführung oder Sichtmerkmale.
 5. **Offline/Backend:** Metadaten und Track im lokalen App-Bundle; SQLite, Mediacache, App-Shell-Offline für Web, serverseitiger Sync und Quest-Engine sind geplant, nicht implementiert.
 6. **Offene Produktfragen:** finale Cover/Texturgrad und Typografie; Tile-Anbieter/Lizenz für Produktion und Offline; finale Alter-/Dauer-/Schwierigkeitsfreigabe; acht Feldstationen und Medien. Keine dieser offenen Entscheidungen wird durch Mockupdetails oder GPX-Samples ersetzt.
 
-Die Domains `tile.openstreetmap.org` und `api.github.com` sind im Cloud-Konfigurationsentwurf ergänzt. Die laufende Instanz hat die Domainfreigabe inzwischen übernommen; die gesonderte Browser-Zertifikatsfrage bleibt offen. `install_script` (npm ci, TypeScript, Domänentests) und `start_skill` (Devserver, Readiness und Freigabegrenzen) sind ebenfalls gespeichert; das veröffentlicht noch keinen Cloud-Snapshot. Gespeicherte Installations-/Startanweisungen und Veröffentlichung des Cloud-Snapshots sind getrennt von App-Designfreigabe und Produktveröffentlichung.
+Die Domains `tile.openstreetmap.org` und `api.github.com` sind im Cloud-Konfigurationsentwurf ergänzt. Die laufende Instanz hat die Domainfreigabe übernommen; die Browser-Zertifikatsfrage ist nach ausdrücklicher Zustimmung behoben. `install_script` (npm ci, TypeScript, Domänentests) und `start_skill` (Devserver, Readiness und Freigabegrenzen) sind ebenfalls gespeichert; das veröffentlicht noch keinen Cloud-Snapshot. Gespeicherte Installations-/Startanweisungen und Veröffentlichung des Cloud-Snapshots sind getrennt von App-Designfreigabe und Produktveröffentlichung.
 
 ## Screenshotgalerie
 
-Alle Dateien sind echte Chromium-Aufnahmen der Expo-Web-App mit jeweils exakt benanntem Viewport. Keine Mockups und keine Bildmontagen. Siehe [screenshots](screenshots/); Kartenbilder zeigen den bestehenden Netzwerkblocker.
+Alle Dateien sind echte Chromium-Aufnahmen der Expo-Web-App mit jeweils exakt benanntem Viewport. Keine Mockups und keine Bildmontagen. Siehe [screenshots](screenshots/); Die regulären Kartenbilder zeigen geladene OSM-Kacheln; nur die ausdrücklich benannten Kachelfehler-Screenshots zeigen den simulierten Fehlerzustand.
 
 | Ansicht | 320×640 | 360×800 | 390×844 |
 | --- | --- | --- | --- |
@@ -73,4 +73,4 @@ Alle Dateien sind echte Chromium-Aufnahmen der Expo-Web-App mit jeweils exakt be
 
 ## Stop-Gate
 
-**Bitte Entdecken, Questdetails, globale Karte und beide Navigationsansichten visuell freigeben oder konkrete Designänderungen nennen. Bis dahin keine weitere Phase beginnen.** Die Netzwerk- und Gerätetestlücken bleiben dabei ausdrücklich offen.
+**Designfreigabe für Phase 1–2 und Zustimmung zur dauerhaften Browser-CA-Konfiguration vom Nutzer erhalten.** Die anschließende Kartenprüfung und Screenshotaktualisierung sind abgeschlossen. Weitere Entwicklungsphasen wurden nicht begonnen. Native Geräte-, Kartenlizenz- und Feldabnahmen bleiben erforderlich; die Designfreigabe veröffentlicht keine Outdoor-Quest.
