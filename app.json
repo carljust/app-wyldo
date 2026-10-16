@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "Wyldo",
+    "slug": "wyldo",
+    "scheme": "wyldo",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "plugins": ["expo-router", "expo-status-bar", "expo-font"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.wyldo.adventure"
+    },
+    "android": {
+      "package": "app.wyldo.adventure"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    }
+  }
+}

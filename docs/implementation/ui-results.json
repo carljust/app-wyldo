@@ -1,0 +1,185 @@
+{
+  "results": [
+    {
+      "name": "320 discovery: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "320 search and empty reset",
+      "status": "passed"
+    },
+    {
+      "name": "320 details: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "320 real basemap tiles load with TLS verification",
+      "status": "passed"
+    },
+    {
+      "name": "320 detail track and combined start-finish marker",
+      "status": "passed"
+    },
+    {
+      "name": "320 direction: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "320 heading, missing location, pause and resume",
+      "status": "passed"
+    },
+    {
+      "name": "320 navigation map: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "320 global map: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "320 global map has exactly two start pins and no route",
+      "status": "passed"
+    },
+    {
+      "name": "320 pin preview and detail: Das Geheimnis des Waldlichts",
+      "status": "passed"
+    },
+    {
+      "name": "320 pin preview and detail: Die Botschaft vom Silberbach",
+      "status": "passed"
+    },
+    {
+      "name": "320 backpack: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "320 profile: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "320 offline quest data and unavailable tiles",
+      "status": "passed"
+    },
+    {
+      "name": "360 discovery: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "360 search and empty reset",
+      "status": "passed"
+    },
+    {
+      "name": "360 details: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "360 real basemap tiles load with TLS verification",
+      "status": "passed"
+    },
+    {
+      "name": "360 detail track and combined start-finish marker",
+      "status": "passed"
+    },
+    {
+      "name": "360 direction: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "360 heading, missing location, pause and resume",
+      "status": "passed"
+    },
+    {
+      "name": "360 navigation map: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "360 global map: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "360 global map has exactly two start pins and no route",
+      "status": "passed"
+    },
+    {
+      "name": "360 pin preview and detail: Das Geheimnis des Waldlichts",
+      "status": "passed"
+    },
+    {
+      "name": "360 pin preview and detail: Die Botschaft vom Silberbach",
+      "status": "passed"
+    },
+    {
+      "name": "360 backpack: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "360 profile: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "360 offline quest data and unavailable tiles",
+      "status": "passed"
+    },
+    {
+      "name": "390 discovery: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "390 search and empty reset",
+      "status": "passed"
+    },
+    {
+      "name": "390 details: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "390 real basemap tiles load with TLS verification",
+      "status": "passed"
+    },
+    {
+      "name": "390 detail track and combined start-finish marker",
+      "status": "passed"
+    },
+    {
+      "name": "390 direction: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "390 heading, missing location, pause and resume",
+      "status": "passed"
+    },
+    {
+      "name": "390 navigation map: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "390 global map: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "390 global map has exactly two start pins and no route",
+      "status": "passed"
+    },
+    {
+      "name": "390 pin preview and detail: Das Geheimnis des Waldlichts",
+      "status": "passed"
+    },
+    {
+      "name": "390 pin preview and detail: Die Botschaft vom Silberbach",
+      "status": "passed"
+    },
+    {
+      "name": "390 backpack: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "390 profile: no horizontal overflow",
+      "status": "passed"
+    },
+    {
+      "name": "390 offline quest data and unavailable tiles",
+      "status": "passed"
+    }
+  ],
+  "runtimeErrors": []
+}
