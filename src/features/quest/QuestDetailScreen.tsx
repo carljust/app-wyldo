@@ -1,3 +1,4 @@
+import { useQuestDetail } from "../../data/useQuests";
 import AdventureLandscape from "../../components/AdventureLandscape";
 import { useMemo } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -21,7 +22,7 @@ import { getVisibleQuest } from "../../data/quests";
 import { colors as c } from "../../theme/tokens";
 export default function Details() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const q = getVisibleQuest(id);
+  const { quest: q, loading, error } = useQuestDetail(id);
   const model = useMemo(() => (q ? detailMap(q) : { pins: [], line: [] }), [q]);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.deep }}>
@@ -34,7 +35,13 @@ export default function Details() {
         />
         {!q ? (
           <Panel>
-            <Title small>Quest nicht verfügbar</Title>
+            <Title small>
+              {loading
+                ? "Quest wird geladen …"
+                : error
+                  ? "Quest konnte nicht geladen werden"
+                  : "Quest nicht verfügbar"}
+            </Title>
             <Label>Diese Vorschau ist nicht öffentlich freigegeben.</Label>
           </Panel>
         ) : (
@@ -42,7 +49,9 @@ export default function Details() {
             <Badge>
               {q.status === "draft"
                 ? "UNVERÖFFENTLICHT · DEV-VORSCHAU"
-                : "FIKTIVE TESTQUEST"}
+                : q.kind === "fixture"
+                  ? "FIKTIVE TESTQUEST"
+                  : "VERÖFFENTLICHTE QUEST"}
             </Badge>
             <View
               style={{
@@ -95,11 +104,16 @@ export default function Details() {
             <Title small>Deine Route ins Abenteuer</Title>
             {q.route ? (
               <>
-                <Notice>Routenentwurf – noch nicht vor Ort geprüft</Notice>
+                <Notice>
+                  {q.route.approval === "draft"
+                    ? "Routenentwurf – noch nicht vor Ort geprüft"
+                    : "Geprüfter Routenverlauf"}
+                </Notice>
                 <QuestMap model={model} />
                 <Label muted>
-                  OH! 6 · Nutzer-GPX · 218 Trackpunkte · ca. 2,55 km Tracklänge.
-                  Start/Ziel ist ein ungeprüfter Kandidat.
+                  {q.route.approval === "draft"
+                    ? "OH! 6 · Nutzer-GPX · 218 Trackpunkte · ca. 2,55 km Tracklänge. Start/Ziel ist ein ungeprüfter Kandidat."
+                    : `${q.route.geometry.coordinates.length} Trackpunkte · Route ${q.route.routeVersion}`}
                 </Label>
               </>
             ) : (

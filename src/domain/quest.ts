@@ -11,7 +11,7 @@ export type QuestSummary = {
 };
 export type QuestRoute = {
   geometry: { type: "LineString"; coordinates: [number, number][] };
-  source: "gpx_import";
+  source: "gpx_import" | "verified_author_route";
   approval: "draft" | "field_verified";
   routeVersion: string;
 };

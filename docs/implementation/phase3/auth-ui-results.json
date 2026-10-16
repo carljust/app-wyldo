@@ -1,0 +1,35 @@
+[
+  {
+    "viewport": "320x640",
+    "disabledEmail": true,
+    "disabledGoogle": true,
+    "configurationNotice": true,
+    "noHorizontalOverflow": true,
+    "invalidCallback": true,
+    "retryNavigation": true,
+    "noAuthRequests": true,
+    "noRuntimeErrors": true
+  },
+  {
+    "viewport": "360x800",
+    "disabledEmail": true,
+    "disabledGoogle": true,
+    "configurationNotice": true,
+    "noHorizontalOverflow": true,
+    "invalidCallback": true,
+    "retryNavigation": true,
+    "noAuthRequests": true,
+    "noRuntimeErrors": true
+  },
+  {
+    "viewport": "390x844",
+    "disabledEmail": true,
+    "disabledGoogle": true,
+    "configurationNotice": true,
+    "noHorizontalOverflow": true,
+    "invalidCallback": true,
+    "retryNavigation": true,
+    "noAuthRequests": true,
+    "noRuntimeErrors": true
+  }
+]
