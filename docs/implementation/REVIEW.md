@@ -1,8 +1,8 @@
 # Designprüfung · Wyldo Phase 1–2
 
-**Stand:** 17.10.2026 · **Branch:** `feat/wyldo-design-v12` · **Basis:** `d15cd71` (Masterpaket V1.2).
+**Stand:** 17.10.2026 · **Branch:** `feat/wyldo-design-v12` · **Basis:** `d15cd71` (Masterpaket V1.2). **Implementierungscommit:** `65986c8`. **PR:** [#1](https://github.com/carljust/app-wyldo/pull/1), offen; Feature-Branch erfolgreich gepusht.
 
-**Status:** Implementierung zur visuellen Prüfung, keine Designabnahme und keine Outdoor-Freigabe. Online-Kartenkacheln und GitHub-PR-API sind in dieser Instanz blockiert. Kein Backend, keine Quest-Engine, keine produktive Station und keine Belohnungsvergabe implementiert.
+**Status:** Implementierung zur visuellen Prüfung, keine Designabnahme und keine Outdoor-Freigabe. Online-Kartenkacheln sind im Testbrowser wegen fehlendem Vertrauen in die bereitgestellte Cloud-Proxy-CA weiterhin nicht verifiziert. Die Netzwerkfreigabe und die GitHub-PR-API funktionieren inzwischen. Kein Backend, keine Quest-Engine, keine produktive Station und keine Belohnungsvergabe implementiert.
 
 ## Geliefert
 
@@ -45,14 +45,14 @@ Die Vektorlandschaft ist eigene dekorative Prototypgrafik, kein geografischer Na
 
 ## Offene Punkte und konkrete Blocker
 
-1. **Kartenkacheln:** `tile.openstreetmap.org` antwortet über den Cloudproxy mit HTTP 403 beim CONNECT. Screenshotkarten zeigen deshalb ehrlich den Kachelfehler, die echte georeferenzierte GPX-Geometrie und Marker. **Eine geladene Basiskarte wurde nicht verifiziert.** Nach wirksamer Netzwerkfreigabe Tile-Rendering und Screenshots nachprüfen.
-2. **Pull Request:** GitHub-Git-Zugriff funktioniert; `api.github.com` wird vom Proxy blockiert. API-Leseanfrage scheitert bereits vor einer belastbaren Rechteprüfung. Ein PR darf erst nach bestätigtem Create-Ergebnis als erstellt bezeichnet werden; lokale PR-Beschreibung liegt in [PR.md](PR.md).
+1. **Kartenkacheln:** Anfangs HTTP 403 beim Cloudproxy-CONNECT; die gespeicherte Domainfreigabe ist inzwischen wirksam. Der Browser scheitert nun nachvollziehbar mit `net::ERR_CERT_AUTHORITY_INVALID`: Die bereitgestellte `environment-proxy-ca.crt` fehlt im Chromium-NSS-Vertrauensspeicher. Die automatische Freigabeprüfung hat deren dauerhaften Import abgelehnt, da er das Vertrauen für künftigen Browserverkehr erweitert; der Import wurde nicht ausgeführt und kein TLS-Bypass eingesetzt. Ein separater curl-HEAD erhält zwar HTTP 200, aber auch einen OSM-`x-blocked`-Header; das beweist ebenfalls kein korrektes Kartenbild. Screenshotkarten zeigen deshalb ehrlich den Kachelfehler, die echte georeferenzierte GPX-Geometrie und Marker. **Eine geladene Basiskarte wurde nicht verifiziert.** Explizite Zustimmung zur Browser-CA-Konfiguration ist offen; danach Browser-Tiles samt OSM-Policy prüfen und Screenshots aktualisieren.
+2. **Pull Request:** Die anfängliche GitHub-API-Netzwerksperre ist behoben. [PR #1](https://github.com/carljust/app-wyldo/pull/1) wurde tatsächlich erstellt und sein Status `OPEN` per API bestätigt. Branch und Commit sind remote verifiziert. Beschreibung auch in [PR.md](PR.md).
 3. **Native Tests:** Keine iOS-/Android-Simulatoren/Geräte und keine signierten Development Builds geprüft. Android-Maps-Key/SDK-Einrichtung, native Kachelfailure-Zustände, Zoomclustering, Touch, Safe Areas und Rendering auf Geräten sind offen. Expo Go nicht als unterstützt bestätigt.
 4. **Live-Funktionen:** GPS/Kompass nur Simulation; `expo-location`-/Berechtigungsintegration erst nach späterer Freigabe. Kein Feldcheck, keine bestätigten Stationen, kein sicherer Produktivstart. Der importierte Track misst ca. 2,55 km, beweist aber keine sichere Wegführung oder Sichtmerkmale.
 5. **Offline/Backend:** Metadaten und Track im lokalen App-Bundle; SQLite, Mediacache, App-Shell-Offline für Web, serverseitiger Sync und Quest-Engine sind geplant, nicht implementiert.
 6. **Offene Produktfragen:** finale Cover/Texturgrad und Typografie; Tile-Anbieter/Lizenz für Produktion und Offline; finale Alter-/Dauer-/Schwierigkeitsfreigabe; acht Feldstationen und Medien. Keine dieser offenen Entscheidungen wird durch Mockupdetails oder GPX-Samples ersetzt.
 
-Die Domains `tile.openstreetmap.org` und `api.github.com` sind im Cloud-Konfigurationsentwurf ergänzt. Die laufende Instanz hat die Freigabe damit noch nicht übernommen. Gespeicherte Installations-/Startanweisungen und Veröffentlichung des Cloud-Snapshots sind getrennt von App-Designfreigabe und Produktveröffentlichung.
+Die Domains `tile.openstreetmap.org` und `api.github.com` sind im Cloud-Konfigurationsentwurf ergänzt. Die laufende Instanz hat die Domainfreigabe inzwischen übernommen; die gesonderte Browser-Zertifikatsfrage bleibt offen. `install_script` (npm ci, TypeScript, Domänentests) und `start_skill` (Devserver, Readiness und Freigabegrenzen) sind ebenfalls gespeichert; das veröffentlicht noch keinen Cloud-Snapshot. Gespeicherte Installations-/Startanweisungen und Veröffentlichung des Cloud-Snapshots sind getrennt von App-Designfreigabe und Produktveröffentlichung.
 
 ## Screenshotgalerie
 
