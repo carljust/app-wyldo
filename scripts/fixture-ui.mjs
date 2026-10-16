@@ -12,18 +12,25 @@ for (const file of [".env", ".env.development", ".env.development.local"])
     throw new Error(
       `Fixture isolation requires reviewing ${file}; it was not modified.`,
     );
-const busy = await new Promise((resolve) => {
-  const socket = net.connect(8081, "127.0.0.1");
-  socket.once("connect", () => {
-    socket.destroy();
-    resolve(true);
-  });
-  socket.once("error", () => resolve(false));
-});
-if (busy)
-  throw new Error(
-    "Port 8081 is occupied. Stop your own dev server before this test.",
+for (const port of [8081, 8083]) {
+  const checks = await Promise.all(
+    ["127.0.0.1", "::1"].map(
+      (host) =>
+        new Promise((resolve) => {
+          const socket = net.connect(port, host);
+          socket.once("connect", () => {
+            socket.destroy();
+            resolve(true);
+          });
+          socket.once("error", () => resolve(false));
+        }),
+    ),
   );
+  if (checks.some(Boolean))
+    throw new Error(
+      `Port ${port} is occupied. Stop your own dev server before this test.`,
+    );
+}
 const moved = existsSync(source);
 if (moved) renameSync(source, backup);
 const env = {
