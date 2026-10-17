@@ -1,3 +1,4 @@
+import { useQuestCatalog } from "../../data/useQuests";
 import { useState } from "react";
 import { router } from "expo-router";
 import {
@@ -30,9 +31,10 @@ export default function Discover() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState(false);
   const draft = questRepository.getDraftQuestPreview();
-  const quests = questRepository
-    .listPublishedQuests()
-    .filter((q) => q.title.toLowerCase().includes(query.toLowerCase()));
+  const catalog = useQuestCatalog();
+  const quests = catalog.quests.filter((q) =>
+    q.title.toLowerCase().includes(query.toLowerCase()),
+  );
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.deep }} edges={["top"]}>
       <Screen>
@@ -147,14 +149,35 @@ export default function Discover() {
             <Icon name="map-outline" color={c.gold} />
           </Pressable>
         </View>
-        <Label muted>Lokaler Testkatalog · kein Produktionsfeed</Label>
+        <Label muted>
+          {catalog.source === "fixture"
+            ? "Lokaler Testkatalog · kein Produktionsfeed"
+            : "Veröffentlichte Abenteuer"}
+        </Label>
+        {catalog.loading && <Notice>Quests werden geladen …</Notice>}
+        {catalog.error && (
+          <Panel>
+            <Label>Quests konnten nicht geladen werden.</Label>
+            <Button label="Erneut laden" onPress={catalog.retry} />
+          </Panel>
+        )}
         {quests.map((q) => (
           <QuestCard key={q.id} quest={q} />
         ))}
-        {!quests.length && (
+        {!catalog.loading && !catalog.error && !quests.length && (
           <Panel>
-            <Label>Keine Quest gefunden.</Label>
-            <Button label="Suche zurücksetzen" onPress={() => setQuery("")} />
+            <Label>
+              {query
+                ? "Keine Quest gefunden."
+                : "Noch keine veröffentlichten Abenteuer."}
+            </Label>
+            {query ? (
+              <Button label="Suche zurücksetzen" onPress={() => setQuery("")} />
+            ) : (
+              <Label muted>
+                Sobald eine Quest freigegeben ist, findest du sie hier.
+              </Label>
+            )}
           </Panel>
         )}
         <Panel light>

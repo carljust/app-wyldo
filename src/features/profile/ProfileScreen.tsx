@@ -1,3 +1,6 @@
+import { router } from "expo-router";
+import { useAuth, backendConfig } from "../auth/AuthProvider";
+import { signOut } from "../auth/actions";
 import { useState } from "react";
 import { Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,19 +18,63 @@ import {
 import { colors as c } from "../../theme/tokens";
 export default function Profile() {
   const [reduce, setReduce] = useState(true);
+  const auth = useAuth();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(false);
+  async function logout() {
+    setBusy(true);
+    setError(false);
+    try {
+      await signOut();
+    } catch {
+      setError(true);
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.deep }} edges={["top"]}>
       <Screen>
-        <Badge>PROFIL · VORSCHAU</Badge>
+        <Badge>
+          {auth.configured ? "DEIN FAMILIENPROFIL" : "PROFIL · VORSCHAU"}
+        </Badge>
         <Title>Hallo, Entdeckerfamilie.</Title>
         <Panel>
           <Icon name="person-circle-outline" color={c.gold} size={56} />
-          <Label>Lokale Designvorschau</Label>
-          <Label muted>
-            Kein Konto verbunden. Keine personenbezogenen Daten oder
-            Standortaufzeichnungen.
+          <Label>
+            {auth.loading
+              ? "Anmeldung wird geladen …"
+              : auth.session
+                ? "Angemeldet"
+                : auth.configured
+                  ? "Noch nicht angemeldet"
+                  : "Lokale Designvorschau"}
           </Label>
-          <Button label="Anmelden · in späterer Phase" disabled />
+          <Label muted>
+            {auth.session
+              ? auth.session.user.email
+              : "Kein Konto verbunden. Keine Standortaufzeichnungen."}
+          </Label>
+          {auth.session ? (
+            <Button
+              label={busy ? "Abmeldung läuft …" : "Abmelden"}
+              disabled={busy}
+              onPress={logout}
+            />
+          ) : (
+            <Button
+              label="Anmelden"
+              disabled={auth.loading}
+              onPress={() => router.push("/auth")}
+            />
+          )}
+          {error && (
+            <Notice>
+              Abmeldung fehlgeschlagen. Bitte Verbindung prüfen und erneut
+              versuchen.
+            </Notice>
+          )}
+          {auth.error && <Notice>{auth.error}</Notice>}
         </Panel>
         <Panel>
           <View style={[s.row, { justifyContent: "space-between" }]}>
@@ -50,8 +97,9 @@ export default function Profile() {
           </Label>
         </Panel>
         <Notice>
-          Standort bleibt aus. Live-GPS, Google-Anmeldung und Supabase sind noch
-          nicht freigegeben.
+          {backendConfig.status === "ready"
+            ? "Standort bleibt aus. Anmeldung aktiviert keine Quest und vergibt keine Belohnungen."
+            : backendConfig.message}
         </Notice>
         <Panel>
           <Label>Datenschutz im Konzept</Label>

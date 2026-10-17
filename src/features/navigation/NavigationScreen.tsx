@@ -1,3 +1,4 @@
+import { useQuestDetail } from "../../data/useQuests";
 import { useMemo, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
@@ -19,7 +20,7 @@ import { getVisibleQuest } from "../../data/quests";
 import { colors as c, fonts } from "../../theme/tokens";
 export default function Navigation() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const q = getVisibleQuest(id);
+  const { quest: q } = useQuestDetail(id);
   const [mode, setMode] = useState<"map" | "direction">("direction");
   const [paused, setPaused] = useState(false);
   const [heading, setHeading] = useState(0);

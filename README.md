@@ -1,6 +1,6 @@
 # Wyldo
 
-Eigenständiger React-Native-/Expo-Neubau nach **Masterpaket V1.2**. Aktueller Umfang: Phase 1–2, Architektur und Design-/Kartenprototyp. Kein Code aus `wanderquest`.
+Eigenständiger React-Native-/Expo-Neubau nach **Masterpaket V1.2**. Phase 1–2 ist designfreigegeben; Phase 3 ergänzt Supabase-/Auth-Grundlagen. Die externe Migration ist bestätigt; reale Login-Abnahme noch offen. Kein Code aus `wanderquest`.
 
 ## Start
 
@@ -42,10 +42,10 @@ npm run test:ui
 - **iOS/Android:** `react-native-maps`, plattformeigene MapView + OpenStreetMap-Rasterkacheln. **Web:** Leaflet, echte interaktive georeferenzierte Karte.
 - Native Development Builds mit SDK-kompatiblen nativen Modulen verwenden. Expo-Go-Unterstützung der konkreten SDK-Version wurde nicht geprüft. Android benötigt einen korrekt konfigurierten Google-Maps-SDK-Key für die zugrunde liegende MapView, auch bei `mapType="none"`; iOS nutzt Apple MapKit. Kein Key wurde erfunden oder eingebaut.
 - Online-Tiles: `tile.openstreetmap.org`. Sichtbare OSM-Attribution; keine Massendownloads, kein Offline-Kachelpaket. OSM-Daten: ODbL; Tile-Nutzungsregeln: https://operations.osmfoundation.org/policies/tiles/. Vor Produktivbetrieb einen geeigneten Tile-Anbieter und Nutzungsvertrag festlegen.
-- Global: zwei **fiktive Testquests**, je ein Startpin, keine Tracks. Externsteine ist kein veröffentlichter Feed-Eintrag.
+- Global: genau ein Startpin je veröffentlichter Quest, keine Tracks. Ohne Backendkonfiguration zwei **fiktive Testquests**; mit Konfiguration echte Supabase-Abfrage und ehrliche Fehler-/Leerzustände. Externsteine ist kein veröffentlichter Feed-Eintrag.
 - Externsteine nur im Dev-Build: kompletter unverifizierter 218-Punkte-GPX-Track, ein Start/Ziel-Kandidat, keine Stationsmarker.
 - Startnavigation ist ausdrücklich **Simulation**, keine Ortungsberechtigung, kein Live-GPS, kein Outdoor-Queststart.
-- Quest-Metadaten und Routengeometrie liegen lokal im Bundle. Kein SQLite-Fortschritt, kein Sync, keine Offline-Kachelgarantie; Web-Neuladen ohne Netz benötigt später einen separaten App-Shell-Cache.
+- Fixture-Metadaten und Externsteine-Routengeometrie liegen lokal im Bundle; der Supabase-Katalog hat noch keinen persistenten Offline-Cache. Kein SQLite-Fortschritt, kein Sync, keine Offline-Kachelgarantie; Web-Neuladen ohne Netz benötigt später einen separaten App-Shell-Cache.
 
 ## Verbindliche Quellen und Review
 
@@ -54,3 +54,16 @@ Das hochgeladene Paket wurde in die vorgesehenen Rootpfade verschoben: [AGENTS.m
 Architektur, Einschränkungen, Screenshotvergleich und Prüfergebnisse: [docs/implementation/REVIEW.md](docs/implementation/REVIEW.md).
 
 **Phase 1–2 ist vom Nutzer visuell freigegeben.** Die anschließende Kartenprüfung lädt echte OSM-Kacheln mit aktivem TLS. Keine Quest-Engine oder produktive Backendanbindung in diesem Paket. Native Geräte-/Outdoor-Abnahme steht noch aus.
+
+## Phase 3: Supabase und Anmeldung
+
+Die bereitgestellte Projektkonfiguration liegt lokal in einer ignorierten `.env.local`. Öffentliche Client-Variablen stehen in `.env.example`; keine Server-Schlüssel in die App eintragen. Das Projekt antwortet auf Auth-Leseanfragen, E-Mail ist aktiviert, Google deaktiviert. Die Wyldo-Migration ist ausgeführt; die Schnittstellen liefern aktuell einen leeren Katalog. Migration und konkrete Einrichtung: [Phase-3-Setup](docs/implementation/phase3/SETUP.md); Nachweise und Grenzen: [Phase-3-Review](docs/implementation/phase3/REVIEW.md).
+
+```sh
+npm run test:db           # isoliertes PostgreSQL, echtes RLS
+npm run test:fixture-ui   # eigener Testserver; Konfiguration wird sicher gesichert/restauriert
+# Gegen konfigurierten Devserver auf 8083, nur Lese-/UI-Prüfungen:
+npm run test:backend-ui
+```
+
+Die atomare Migration verändert keine bestehenden Tabellen; Namenskonflikte führen zum Abbruch. Vor dem Einspielen im vorhandenen Supabase-Projekt zuerst die reine Metadatenprüfung `supabase/PREFLIGHT.sql` ausführen. Ein Publishable Key erlaubt keine Datenbankmigration. Google, echte Magic-Link-Zustellung, Session-Neustart und Native-Login sind noch nicht live abgenommen.

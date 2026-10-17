@@ -1,0 +1,29 @@
+[
+  {
+    "viewport": "320x640",
+    "configuredEmailUI": true,
+    "googleDisabled": true,
+    "liveEmptyCatalog": true,
+    "noFixtureFallbackOnBackendError": true,
+    "noRemoteWrites": true,
+    "noRuntimeErrors": true
+  },
+  {
+    "viewport": "360x800",
+    "configuredEmailUI": true,
+    "googleDisabled": true,
+    "liveEmptyCatalog": true,
+    "noFixtureFallbackOnBackendError": true,
+    "noRemoteWrites": true,
+    "noRuntimeErrors": true
+  },
+  {
+    "viewport": "390x844",
+    "configuredEmailUI": true,
+    "googleDisabled": true,
+    "liveEmptyCatalog": true,
+    "noFixtureFallbackOnBackendError": true,
+    "noRemoteWrites": true,
+    "noRuntimeErrors": true
+  }
+]

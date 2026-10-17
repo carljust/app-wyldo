@@ -28,7 +28,9 @@ export default function QuestCard({ quest }: { quest: QuestSummary }) {
         <Badge>
           {quest.status === "draft"
             ? "UNVERÖFFENTLICHT · DEV"
-            : "FIKTIVE TESTQUEST"}
+            : quest.kind === "fixture"
+              ? "FIKTIVE TESTQUEST"
+              : "ABENTEUER"}
         </Badge>
         <View style={{ flex: 1 }} />
         <Icon
@@ -46,7 +48,9 @@ export default function QuestCard({ quest }: { quest: QuestSummary }) {
         <Text style={{ color: c.muted, fontSize: 12 }}>
           {quest.status === "draft"
             ? "8 Kapitel  ·  4 Steinsiegel"
-            : "Nur zur Interaktionsprüfung"}
+            : quest.kind === "fixture"
+              ? "Nur zur Interaktionsprüfung"
+              : "Veröffentlichtes Abenteuer"}
         </Text>
         <Icon name="arrow-forward-circle" size={36} color={c.gold} />
       </View>
