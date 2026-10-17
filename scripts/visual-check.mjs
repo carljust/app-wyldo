@@ -147,8 +147,8 @@ try {
             exact: true,
           })
           .click();
-        assert.notEqual(
-          await page.getByText(/Simulierte Peilung/).innerText(),
+        await page.waitForFunction(
+          (previous) => !document.body.innerText.includes(previous),
           before,
         );
         await page

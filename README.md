@@ -1,6 +1,6 @@
 # Wyldo
 
-Eigenständiger React-Native-/Expo-Neubau nach **Masterpaket V1.2**. Phase 1–2 ist designfreigegeben; Phase 3 ergänzt Supabase-/Auth-Grundlagen. Die externe Migration ist bestätigt; reale Login-Abnahme noch offen. Kein Code aus `wanderquest`.
+Eigenständiger React-Native-/Expo-Neubau nach **Masterpaket V1.2**. Phase 1–3 sind freigegeben; Phase 4 ergänzt gespeicherte Navigation, Pause/Resume und eine abgesicherte Checkpoint-Outbox. Die externe Migration ist bestätigt; reale Login-Abnahme noch offen. Kein Code aus `wanderquest`.
 
 ## Start
 
@@ -44,8 +44,8 @@ npm run test:ui
 - Online-Tiles: `tile.openstreetmap.org`. Sichtbare OSM-Attribution; keine Massendownloads, kein Offline-Kachelpaket. OSM-Daten: ODbL; Tile-Nutzungsregeln: https://operations.osmfoundation.org/policies/tiles/. Vor Produktivbetrieb einen geeigneten Tile-Anbieter und Nutzungsvertrag festlegen.
 - Global: genau ein Startpin je veröffentlichter Quest, keine Tracks. Ohne Backendkonfiguration zwei **fiktive Testquests**; mit Konfiguration echte Supabase-Abfrage und ehrliche Fehler-/Leerzustände. Externsteine ist kein veröffentlichter Feed-Eintrag.
 - Externsteine nur im Dev-Build: kompletter unverifizierter 218-Punkte-GPX-Track, ein Start/Ziel-Kandidat, keine Stationsmarker.
-- Startnavigation ist ausdrücklich **Simulation**, keine Ortungsberechtigung, kein Live-GPS, kein Outdoor-Queststart.
-- Fixture-Metadaten und Externsteine-Routengeometrie liegen lokal im Bundle; der Supabase-Katalog hat noch keinen persistenten Offline-Cache. Kein SQLite-Fortschritt, kein Sync, keine Offline-Kachelgarantie; Web-Neuladen ohne Netz benötigt später einen separaten App-Shell-Cache.
+- Externsteine bleibt ausdrücklich **Simulation**, ohne Ortungsberechtigung oder Outdoor-Queststart. Live-Ortung ist technisch nur für angemeldete Nutzer mit veröffentlichter, feldgeprüfter Questversion vorgesehen; derzeit gibt es keine solche Quest im Projekt.
+- Gestartete Navigation speichert einen Quest-/Routen-Snapshot sowie Zustand: native SQLite, Web IndexedDB. Der gesamte Supabase-Katalog wird noch nicht offline gespiegelt. Keine Offline-Kachelgarantie; Web-Neuladen ohne Netz benötigt einen separaten App-Shell-Cache.
 
 ## Verbindliche Quellen und Review
 
@@ -53,7 +53,7 @@ Das hochgeladene Paket wurde in die vorgesehenen Rootpfade verschoben: [AGENTS.m
 
 Architektur, Einschränkungen, Screenshotvergleich und Prüfergebnisse: [docs/implementation/REVIEW.md](docs/implementation/REVIEW.md).
 
-**Phase 1–2 ist vom Nutzer visuell freigegeben.** Die anschließende Kartenprüfung lädt echte OSM-Kacheln mit aktivem TLS. Keine Quest-Engine oder produktive Backendanbindung in diesem Paket. Native Geräte-/Outdoor-Abnahme steht noch aus.
+**Phase 1–2 ist vom Nutzer visuell freigegeben.** Die anschließende Kartenprüfung lädt echte OSM-Kacheln mit aktivem TLS. Die vollständige Acht-Kapitel-Engine und Belohnungen folgen in späteren Paketen. Native Geräte-/Outdoor-Abnahme steht noch aus.
 
 ## Phase 3: Supabase und Anmeldung
 
@@ -67,3 +67,16 @@ npm run test:backend-ui
 ```
 
 Die atomare Migration verändert keine bestehenden Tabellen; Namenskonflikte führen zum Abbruch. Vor dem Einspielen im vorhandenen Supabase-Projekt zuerst die reine Metadatenprüfung `supabase/PREFLIGHT.sql` ausführen. Ein Publishable Key erlaubt keine Datenbankmigration. Google, echte Magic-Link-Zustellung, Session-Neustart und Native-Login sind noch nicht live abgenommen.
+
+## Phase 4: gespeicherte Navigation
+
+Navigationsstand, Pause/Resume, bewusster Start nach stabiler Ankunft und ein kurzer Storyeinstieg sind implementiert. Nach dem Intro wartet die App auf ein freigegebenes Ziel; es werden keine Stationen erfunden. Simulationen bleiben ausschließlich lokal. Live-Checkpoints verwenden eine atomare Outbox und serverseitige Wiederholungssperre, ohne XP-Vergabe.
+
+[Review und Screenshots](docs/implementation/phase4/REVIEW.md) · [Einrichtung und neue Migration](docs/implementation/phase4/SETUP.md). Die neue Phase-4-Migration ist **noch nicht im gehosteten Supabase-Projekt ausgeführt**.
+
+```sh
+# Konfigurierter Devserver auf 8083:
+npm run test:navigation-ui
+```
+
+Echte Geräteortung, nativer SQLite-Neustart und authentifizierter Live-Sync sind noch nicht auf Geräten bzw. dem gehosteten Projekt abgenommen.

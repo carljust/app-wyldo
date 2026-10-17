@@ -1,3 +1,5 @@
+import { useAuth } from "../auth/AuthProvider";
+import { canUseLiveNavigation } from "../../domain/navigation/session";
 import { useQuestDetail } from "../../data/useQuests";
 import AdventureLandscape from "../../components/AdventureLandscape";
 import { useMemo } from "react";
@@ -22,6 +24,7 @@ import { getVisibleQuest } from "../../data/quests";
 import { colors as c } from "../../theme/tokens";
 export default function Details() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const ownerId = useAuth().session?.user.id ?? null;
   const { quest: q, loading, error } = useQuestDetail(id);
   const model = useMemo(() => (q ? detailMap(q) : { pins: [], line: [] }), [q]);
   return (
@@ -140,6 +143,12 @@ export default function Details() {
               Auf markierten Wegen bleiben. Keine Rätselstationen freigegeben.
               Diese Vorschau erlaubt keinen Outdoor-Queststart.
             </Notice>
+            {q && canUseLiveNavigation(q, ownerId) && (
+              <Button
+                label="Zum Startpunkt navigieren"
+                onPress={() => router.push(`/navigate/${q.id}?mode=live`)}
+              />
+            )}
             {__DEV__ && (
               <Button
                 label="Zum Startpunkt · Simulation"

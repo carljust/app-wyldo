@@ -92,7 +92,7 @@ export class SupabaseQuestRepository {
   async getQuestDetails(id: string): Promise<QuestDetail | undefined> {
     const { data, error } = await this.client
       .from("quests")
-      .select(`${columns},description,chapters,seals`)
+      .select(`${columns},description,chapters,seals,outdoor_playable`)
       .eq("id", id)
       .maybeSingle();
     if (error) throw error;
@@ -128,7 +128,8 @@ export class SupabaseQuestRepository {
       chapters: data.chapters,
       seals: data.seals,
       route,
-      outdoorPlayable: false,
+      outdoorPlayable: data.outdoor_playable === true,
+      questVersionId: version?.id,
       spoilerPolicy: "hide_stations",
     };
   }
