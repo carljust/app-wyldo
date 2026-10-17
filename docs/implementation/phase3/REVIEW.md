@@ -1,6 +1,6 @@
 # Phase 3 · Supabase/Auth-Grundlagen
 
-**Branch:** `feat/wyldo-supabase-auth`, aufbauend auf dem designfreigegebenen PR #1. **Status:** lokal implementiert und geprüft; echte Projektmigration und Login-Abnahme noch ausstehend. Kein produktiver Queststart, keine Quest-Engine und keine XP-Vergabe.
+**Branch:** `feat/wyldo-supabase-auth`, aufbauend auf dem designfreigegebenen PR #1. **Status:** lokal implementiert und geprüft; Projektmigration vom Nutzer ausgeführt und über echte API-Leseanfragen bestätigt; Login-Abnahme noch ausstehend. Kein produktiver Queststart, keine Quest-Engine und keine XP-Vergabe.
 
 ## Implementierung
 
@@ -19,11 +19,12 @@ Mit dem bereitgestellten öffentlichen Key nur lesend geprüft:
 | Prüfung | Ergebnis |
 | --- | --- |
 | Supabase Auth-Settings | HTTP 200; E-Mail aktiv; Google aus; Registrierung erlaubt |
-| `quest_summaries` | HTTP 404 / PGRST205, Wyldo-Schema noch nicht angelegt |
-| App bei fehlendem Schema | Eindeutiger Ladefehler, Retrybutton, keine Fixture-Quests im echten Feed |
+| `quest_summaries`, `quests`, `quest_routes` | Nach Nutzer-Migration jeweils HTTP 200, 0 Zeilen; noch keine veröffentlichten Quests |
+| `profiles` ohne Nutzeranmeldung | HTTP 401 / 42501, anonymer Zugriff abgewiesen |
+| App nach Migration | Ehrlicher leerer Katalog; kein Fehler und keine Fixture-Quests im echten Feed. Früheren Schemafehler separat simuliert geprüft |
 | Client-Schreibaktionen gegen das Projekt | Keine durch den Agenten ausgeführt, keine Testmails versandt |
 
-Ein Publishable Key ist ausreichend für die App, aber nicht zum Ausführen von DDL. Der nächste notwendige Schritt steht unter [SETUP.md](SETUP.md): Preflight im vorhandenen Projekt, anschließend nur bei Kollisionsfreiheit die vollständige Migration.
+Ein Publishable Key ist ausreichend für die App, aber nicht zum Ausführen von DDL. Der Nutzer hat Preflight und Migration erfolgreich ausgeführt. Die anschließenden echten REST-Aufrufe bestätigen den neuen Zustand. Noch offen sind echte Login-Sessions; siehe [SETUP.md](SETUP.md).
 
 ## Validierung
 
@@ -33,7 +34,7 @@ Ein Publishable Key ist ausreichend für die App, aber nicht zum Ausführen von 
 | `npm test` | 19 Tests bestanden, 0 übersprungen |
 | `npm run test:db` | Echte PostgreSQL-17-Integration bestanden: Preflight, Migration, Profilbackfill/-trigger, zwei Nutzeridentitäten, RLS, Draft-/Stationsschutz, Storagepolicy, Mutationsverbote, Replayconstraints, sichere Publikation |
 | `npm run test:fixture-ui` | 45 vorhandene Browserchecks und Auth-Konfigurations-/Callbackprüfungen bei 320×640, 360×800, 390×844 bestanden; 30 Baseline- und 9 Auth-Screenshots |
-| `npm run test:backend-ui` | Konfigurierte E-Mail-UI, gesperrtes Google, fehlendes Serverschema und Verzicht auf Fixture-Fallbacks bei drei Viewports geprüft; 0 Remote-Schreibanfragen; 6 Screenshots |
+| `npm run test:backend-ui` | Konfigurierte E-Mail-UI, gesperrtes Google, echter leerer Katalog, separat simuliertes fehlendes Serverschema und Verzicht auf Fixture-Fallbacks bei drei Viewports geprüft; 0 Remote-Schreibanfragen; 9 Screenshots |
 | `npm run format:check`, `git diff --check` | Erfolgreich |
 | Webexport und iOS-/Android-JS-/Hermes-Exports | Erfolgreich, keine native Binary-/Gerätezusage |
 | `node scripts/production-check.mjs` gegen Webexport | 3/3 Sperrprüfungen bestanden (Draft/Simulation nicht öffentlich) |
@@ -50,11 +51,13 @@ Ein erster DB-Starttest traf auf den temporären Unix-Socket während der Postgr
 | Deaktiviertes Formular | [Screenshot](screenshots/320x640-anmeldeformular.png) | [Screenshot](screenshots/360x800-anmeldeformular.png) | [Screenshot](screenshots/390x844-anmeldeformular.png) |
 | Ungültiger Link | [Screenshot](screenshots/320x640-ungueltiger-anmeldelink.png) | [Screenshot](screenshots/360x800-ungueltiger-anmeldelink.png) | [Screenshot](screenshots/390x844-ungueltiger-anmeldelink.png) |
 | Mit Projektkonfiguration | [Screenshot](screenshots/320x640-anmelden-konfiguriert.png) | [Screenshot](screenshots/360x800-anmelden-konfiguriert.png) | [Screenshot](screenshots/390x844-anmelden-konfiguriert.png) |
-| Fehlendes Serverschema | [Screenshot](screenshots/320x640-fehlendes-server-schema.png) | [Screenshot](screenshots/360x800-fehlendes-server-schema.png) | [Screenshot](screenshots/390x844-fehlendes-server-schema.png) |
+| Simulierter Schemafehler | [Screenshot](screenshots/320x640-fehlendes-server-schema.png) | [Screenshot](screenshots/360x800-fehlendes-server-schema.png) | [Screenshot](screenshots/390x844-fehlendes-server-schema.png) |
+
+| Echter leerer Katalog | [Screenshot](screenshots/320x640-leerer-server-katalog.png) | [Screenshot](screenshots/360x800-leerer-server-katalog.png) | [Screenshot](screenshots/390x844-leerer-server-katalog.png) |
 
 ## Offene Abnahme
 
-- Migration im bestehenden Projekt und danach zwei echte getrennte Testkonten prüfen.
+- Migration und anonyme API-Lesezugriffe sind bestätigt. Zwei echte getrennte Testkonten noch prüfen.
 - Redirects konfigurieren, echte Magic-Link-Zustellung und Session nach App-/Browserneustart prüfen.
 - Google im Supabase-Projekt aktivieren, Google-Console-Callback einrichten und danach den echten Native-OAuth-Flow testen.
 - Native Development Builds, Maps SDK-Key, SecureStore-Speichergrenzen, Geräte-/Screenreaderprüfung stehen aus.

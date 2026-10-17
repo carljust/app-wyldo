@@ -5,10 +5,13 @@ Projekt: `https://sfijiillaiojpceginvj.supabase.co`. Der Nutzer hat den öffentl
 ## Verifizierter Projektzustand
 
 - `GET /auth/v1/settings` mit dem bereitgestellten öffentlichen Key: **HTTP 200**, E-Mail aktiviert, Google deaktiviert, Registrierung erlaubt.
-- `GET /rest/v1/quest_summaries?select=id&limit=1`: **HTTP 404, PGRST205**. Die Wyldo-Übersicht existiert noch nicht.
+- Nach der vom Nutzer ausgeführten Migration liefern `quest_summaries`, `quests` und `quest_routes` jeweils **HTTP 200 mit 0 Zeilen**. Es wurden noch keine Quests veröffentlicht.
+- Anonyme Profilabfrage wird mit **HTTP 401 / 42501** abgewiesen.
 - Keine Schreibanfrage, keine Testmail, kein OAuth-Login und keine externe Migration durch den Agenten ausgeführt.
 
-## Datenbank im vorhandenen Projekt vorbereiten
+## Datenbankmigration · bereits vom Nutzer ausgeführt
+
+Die folgenden Schritte sind abgeschlossen und werden nur zur Reproduktion dokumentiert. Die Migration nicht erneut ausführen.
 
 1. In Supabase den SQL Editor des genannten Projekts öffnen und zuerst [PREFLIGHT.sql](../../../supabase/PREFLIGHT.sql) ausführen. Das ist eine reine Metadatenprüfung. Bei Ergebnissen **stoppen und Objektnamen klären**, nichts löschen oder vorhandene App-Tabellen ersetzen.
 2. Nur bei kollisionsfreiem Projekt die vollständige [Migration](../../../supabase/migrations/202610170001_foundation.sql) als einen SQL-Lauf ausführen. Die Migration ist ausdrücklich mit `BEGIN`/`COMMIT` abgesichert; ein Konflikt bricht ab. Sie legt Tabellen, RLS, Profiltrigger, eine reine Summary-Ansicht und den privaten Storage-Bucket `wyldo-quest-media` an. Ungeprüfte Externsteine-Inhalte werden nicht veröffentlicht oder als Seed eingetragen.

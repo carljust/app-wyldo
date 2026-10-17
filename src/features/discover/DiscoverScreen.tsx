@@ -166,8 +166,18 @@ export default function Discover() {
         ))}
         {!catalog.loading && !catalog.error && !quests.length && (
           <Panel>
-            <Label>Keine Quest gefunden.</Label>
-            <Button label="Suche zurücksetzen" onPress={() => setQuery("")} />
+            <Label>
+              {query
+                ? "Keine Quest gefunden."
+                : "Noch keine veröffentlichten Abenteuer."}
+            </Label>
+            {query ? (
+              <Button label="Suche zurücksetzen" onPress={() => setQuery("")} />
+            ) : (
+              <Label muted>
+                Sobald eine Quest freigegeben ist, findest du sie hier.
+              </Label>
+            )}
           </Panel>
         )}
         <Panel light>

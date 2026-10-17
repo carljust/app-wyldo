@@ -62,7 +62,11 @@ export default function MapScreen() {
           </Panel>
         ) : (
           <Panel>
-            <Label>Tippe auf einen goldenen Startpin.</Label>
+            <Label>
+              {!catalog.loading && !catalog.error && !quests.length
+                ? "Noch keine veröffentlichten Abenteuer."
+                : "Tippe auf einen goldenen Startpin."}
+            </Label>
             <Label muted>
               Keine Kapitel oder geheimen Stationen werden angezeigt.
             </Label>

@@ -1,6 +1,6 @@
 # Wyldo
 
-Eigenständiger React-Native-/Expo-Neubau nach **Masterpaket V1.2**. Phase 1–2 ist designfreigegeben; Phase 3 ergänzt Supabase-/Auth-Grundlagen. Die externe Migration und reale Login-Abnahme sind noch offen. Kein Code aus `wanderquest`.
+Eigenständiger React-Native-/Expo-Neubau nach **Masterpaket V1.2**. Phase 1–2 ist designfreigegeben; Phase 3 ergänzt Supabase-/Auth-Grundlagen. Die externe Migration ist bestätigt; reale Login-Abnahme noch offen. Kein Code aus `wanderquest`.
 
 ## Start
 
@@ -57,7 +57,7 @@ Architektur, Einschränkungen, Screenshotvergleich und Prüfergebnisse: [docs/im
 
 ## Phase 3: Supabase und Anmeldung
 
-Die bereitgestellte Projektkonfiguration liegt lokal in einer ignorierten `.env.local`. Öffentliche Client-Variablen stehen in `.env.example`; keine Server-Schlüssel in die App eintragen. Das Projekt antwortet auf Auth-Leseanfragen, E-Mail ist aktiviert, Google deaktiviert. Die Wyldo-Datenbankübersicht fehlt noch. Migration und konkrete Einrichtung: [Phase-3-Setup](docs/implementation/phase3/SETUP.md); Nachweise und Grenzen: [Phase-3-Review](docs/implementation/phase3/REVIEW.md).
+Die bereitgestellte Projektkonfiguration liegt lokal in einer ignorierten `.env.local`. Öffentliche Client-Variablen stehen in `.env.example`; keine Server-Schlüssel in die App eintragen. Das Projekt antwortet auf Auth-Leseanfragen, E-Mail ist aktiviert, Google deaktiviert. Die Wyldo-Migration ist ausgeführt; die Schnittstellen liefern aktuell einen leeren Katalog. Migration und konkrete Einrichtung: [Phase-3-Setup](docs/implementation/phase3/SETUP.md); Nachweise und Grenzen: [Phase-3-Review](docs/implementation/phase3/REVIEW.md).
 
 ```sh
 npm run test:db           # isoliertes PostgreSQL, echtes RLS

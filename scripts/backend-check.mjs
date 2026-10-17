@@ -50,6 +50,32 @@ try {
     });
     await page.goto("http://localhost:8083/");
     await page
+      .getByText("Noch keine veröffentlichten Abenteuer.", { exact: true })
+      .waitFor();
+    assert.equal(
+      await page
+        .getByText("Quests konnten nicht geladen werden.", { exact: true })
+        .count(),
+      0,
+    );
+    await page
+      .getByText("Noch keine veröffentlichten Abenteuer.", { exact: true })
+      .scrollIntoViewIfNeeded();
+    await page.screenshot({
+      path: `${out}/${width}x${height}-leerer-server-katalog.png`,
+    });
+    await page.route("**/rest/v1/quest_summaries**", (route) =>
+      route.fulfill({
+        status: 404,
+        contentType: "application/json",
+        body: JSON.stringify({
+          code: "PGRST205",
+          message: "Simulated missing schema for UI regression",
+        }),
+      }),
+    );
+    await page.reload();
+    await page
       .getByText("Quests konnten nicht geladen werden.", { exact: true })
       .waitFor();
     await page
@@ -73,12 +99,13 @@ try {
       viewport: `${width}x${height}`,
       configuredEmailUI: true,
       googleDisabled: true,
+      liveEmptyCatalog: true,
       noFixtureFallbackOnBackendError: true,
       noRemoteWrites: true,
       noRuntimeErrors: true,
     });
     console.log(
-      `PASS ${width}: configured auth, disabled Google, explicit schema error, no remote writes`,
+      `PASS ${width}: configured auth, disabled Google, live empty catalog, simulated schema error, no remote writes`,
     );
     await page.close();
   }
