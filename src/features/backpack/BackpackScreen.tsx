@@ -1,3 +1,4 @@
+import { SavedSessions } from "../session/SavedSessions";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -17,6 +18,7 @@ export default function Backpack() {
       <Screen>
         <Badge>DEIN ABENTEUER-INVENTAR · VORSCHAU</Badge>
         <Title>Ein Rucksack voller Geschichten.</Title>
+        <SavedSessions />
         <View style={{ alignItems: "center" }}>
           <Fox size={200} />
         </View>
@@ -33,8 +35,8 @@ export default function Backpack() {
           <Icon name="lock-closed-outline" color={c.gold} />
           <Label>Noch keine Fundstücke</Label>
           <Label muted>
-            Inventar, XP und Questfortschritt werden erst nach der
-            Designfreigabe entwickelt. Diese Vorschau vergibt keine Belohnungen.
+            Inventar und XP folgen später. Gespeicherte Navigation kannst du
+            hier fortsetzen. Diese Phase vergibt keine Belohnungen.
           </Label>
         </Panel>
       </Screen>

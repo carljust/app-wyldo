@@ -1,0 +1,41 @@
+[
+  {
+    "viewport": "320x640",
+    "headingSurvivesReload": true,
+    "pauseSurvivesReload": true,
+    "consciousStart": true,
+    "backpackResume": true,
+    "offlineLocalCommit": true,
+    "newPageRestoresPhase": true,
+    "noLiveGps": true,
+    "noSimulationUploads": true,
+    "noStationLeak": true,
+    "noRuntimeErrors": true
+  },
+  {
+    "viewport": "360x800",
+    "headingSurvivesReload": true,
+    "pauseSurvivesReload": true,
+    "consciousStart": true,
+    "backpackResume": true,
+    "offlineLocalCommit": true,
+    "newPageRestoresPhase": true,
+    "noLiveGps": true,
+    "noSimulationUploads": true,
+    "noStationLeak": true,
+    "noRuntimeErrors": true
+  },
+  {
+    "viewport": "390x844",
+    "headingSurvivesReload": true,
+    "pauseSurvivesReload": true,
+    "consciousStart": true,
+    "backpackResume": true,
+    "offlineLocalCommit": true,
+    "newPageRestoresPhase": true,
+    "noLiveGps": true,
+    "noSimulationUploads": true,
+    "noStationLeak": true,
+    "noRuntimeErrors": true
+  }
+]

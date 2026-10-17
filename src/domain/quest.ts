@@ -18,7 +18,8 @@ export type QuestRoute = {
 export type QuestDetail = QuestSummary & {
   description: string;
   route: QuestRoute | null;
-  outdoorPlayable: false;
+  outdoorPlayable: boolean;
+  questVersionId?: string;
   spoilerPolicy: "hide_stations";
   chapters: number;
   seals: number;

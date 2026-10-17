@@ -37,7 +37,9 @@ try {
     "supabase/tests/bootstrap.sql",
     "supabase/PREFLIGHT.sql",
     "supabase/migrations/202610170001_foundation.sql",
+    "supabase/migrations/202610170002_navigation_checkpoints.sql",
     "supabase/tests/security.sql",
+    "supabase/tests/navigation.sql",
   ]) {
     if (file === "supabase/PREFLIGHT.sql") {
       const collisions = run(

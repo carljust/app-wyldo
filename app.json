@@ -11,7 +11,16 @@
       "expo-status-bar",
       "expo-font",
       "expo-secure-store",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-sqlite",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Wyldo nutzt deinen Standort nur während der aktiven Navigation auf freigegebenen Wegen.",
+          "isIosBackgroundLocationEnabled": false,
+          "isAndroidBackgroundLocationEnabled": false
+        }
+      ]
     ],
     "ios": {
       "supportsTablet": true,
